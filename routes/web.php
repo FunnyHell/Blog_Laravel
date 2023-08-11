@@ -26,3 +26,5 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
 });
+
+Route::post('/test-url', [\App\Http\Controllers\test::class, 'test'])->name('test');
