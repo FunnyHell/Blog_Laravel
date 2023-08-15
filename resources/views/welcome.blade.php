@@ -826,19 +826,9 @@
         <form action="{{route('test')}}" method="post" enctype="multipart/form-data">
             @csrf
             <textarea id="summernote" name="summernote"></textarea>
+{{--            <input type="file" name="files[]" multiple>--}}
             <button type="submit">Save</button>
         </form>
-        <div class="mt-16">
-            <div
-                class="scale-100 p-6 bg-white dark:bg-gray-800/50 dark:bg-gradient-to-bl from-gray-700/50 via-transparent dark:ring-1 dark:ring-inset dark:ring-white/5 rounded-lg shadow-2xl shadow-gray-500/20 dark:shadow-none flex motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-red-500">
-                <form action="{{route('test')}}" method="post" enctype="multipart/form-data">
-                    @csrf
-                    <input type="file" name="attachments[]" id="trix" multiple>
-                    <input type="hidden" name="trix" id="trix">
-                    <trix-editor input="trix"></trix-editor>
-                    <button type="submit">Save</button>
-                </form>
-            </div>
 
 <!-- TODO: Вынести скрипт в отдельный файл-->
             <script>
@@ -847,6 +837,10 @@
                         placeholder: 'Hello Bootstrap 5',
                         tabsize: 2,
                         height: 100
+                    })
+
+                    $('#summernote').submit(function () {
+                        $('#summernote').summernote('reset');
                     })
                 })
             </script>
