@@ -848,7 +848,9 @@
     </div>
 
 
-</div>
+<div>
+    {!!$post[2]->text!!}
+    <img src="{{asset('storage/'.$post[2]->img)}}">
 </div>
 </body>
 </html>

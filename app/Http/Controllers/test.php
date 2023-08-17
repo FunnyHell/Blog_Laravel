@@ -3,15 +3,23 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class test extends Controller
 {
     public function test(Request $request)
     {
-        if ($request->hasFile('files'))
+        dd($request);
+        if ($request->hasFile('files')) {
             $files = $request->file('files');
-        Storage::put('img', $files);
+            $url = Storage::disk('public')->put('/img', $files);
+            DB::table('post')->insert(['text' => $request->summernote, 'img' => $url]);
+
+
+        }
+        $post = DB::table('post')->get();
+        return redirect('/');
     }
 
 
