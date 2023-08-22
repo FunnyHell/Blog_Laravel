@@ -5,7 +5,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Level_access>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\LevelAccess>
  */
 class LevelAccessFactory extends Factory
 {
@@ -17,7 +17,13 @@ class LevelAccessFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => $this->faker->word,
+            'user_id' => $this->faker->numberBetween(1, 10),
+            'access_to_posts_level' => $this->faker->numberBetween(1, 5),
+            'access_to_chats_level' => $this->faker->numberBetween(1, 5),
+            'comment_level' => $this->faker->boolean,
+            'monthly_payment' => $this->faker->randomFloat(2, 1, 100),
+            'yearly_payment' => $this->faker->randomFloat(2, 1, 1000)
         ];
     }
 }

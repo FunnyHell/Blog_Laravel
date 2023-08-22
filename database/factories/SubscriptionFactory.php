@@ -17,7 +17,9 @@ class SubscriptionFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'user_id' => $this->faker->numberBetween(1, 10),
+            'receiver_id' => $this->faker->numberBetween(1, 10),
+            'level_of_subscription_id' => $this->faker->numberBetween(1, 20),
         ];
     }
 }

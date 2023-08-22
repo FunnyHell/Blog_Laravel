@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Level_access extends Model
+class GroupChatsUser extends Model
 {
     use HasFactory;
 }

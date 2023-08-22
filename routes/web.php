@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome', ['post' => DB::table('post')->get()]);
+    return view('welcome');
 });
 
 Route::middleware([

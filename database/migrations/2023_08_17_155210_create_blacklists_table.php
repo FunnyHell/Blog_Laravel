@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('receiver_id');
             $table->foreign('receiver_id')->references('id')->on('users');
             $table->boolean('is_forever')->default(false);
-            $table->timestamp('expired_at');
+            $table->timestamp('expired_at')->nullable();
             $table->timestamps();
         });
     }

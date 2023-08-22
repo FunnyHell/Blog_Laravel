@@ -5,7 +5,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Group_chats_user>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\GroupChatsUser>
  */
 class GroupChatsUserFactory extends Factory
 {

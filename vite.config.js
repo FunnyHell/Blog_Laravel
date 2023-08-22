@@ -2,6 +2,11 @@ import { defineConfig } from 'vite';
 import laravel, { refreshPaths } from 'laravel-vite-plugin';
 
 export default defineConfig({
+    resolve: {
+        alias: {
+            'jQuery': 'jquery'
+        }
+    },
     plugins: [
         laravel({
             input: [
@@ -14,4 +19,7 @@ export default defineConfig({
             ],
         }),
     ],
+    optimizeDeps: {
+        include: ['trix']
+    }
 });

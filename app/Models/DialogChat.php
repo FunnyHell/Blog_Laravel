@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Group_chats_user extends Model
+class DialogChat extends Model
 {
     use HasFactory;
 }
