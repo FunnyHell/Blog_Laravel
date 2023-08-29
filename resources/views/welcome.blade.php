@@ -1,4 +1,7 @@
-<x-guest-layout>
+<x-app-layout>
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
     @livewire('summernote-editor')
-    <h1 id="test">Hello</h1>
-</x-guest-layout>
+        </div>
+    </div>
+</x-app-layout>
