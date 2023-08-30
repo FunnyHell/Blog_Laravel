@@ -5,3 +5,28 @@
 [x-cloak] {
     display: none;
 }
+
+@media (prefers-color-scheme: dark) {
+
+    .note-toolbar {
+        background-color: #2d3748 !important;
+    }
+
+    .note-btn {
+        background-color: #6b7280 !important;
+    }
+
+    .note-editable {
+        color: white !important;
+    }
+}
+
+@media (prefers-color-scheme: light) {
+    .note-toolbar {
+        background-color: white;
+    }
+
+    .note-btn {
+        background-color: white;
+    }
+}
