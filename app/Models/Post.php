@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class Post extends Model
 {
@@ -15,25 +16,39 @@ class Post extends Model
     public static function store(\Illuminate\Http\Request $request)
     {
         $reg = '/<img style="[a-z]+: [0-9|.]+px;" src="data:image\/[a-z]{3,4};base64,/';
-        if (preg_match($reg, $request->summernote)) $result = PostImages::saveFromBase64($request->summernote);
-        if ($result) {
-            $images_ids = array_keys($result);
-            $img_reg = '/(?<=px;" src=")[^>]+/';
-            $text = $request->summernote;
-            preg_match_all($img_reg, $text, $matches);
-            foreach ($matches[0] as $match) {
-                $replacement = array_shift($result); // Получаем следующее значение для замены
-                $text = str_replace($match, $replacement, $text);
+        if (preg_match($reg, $request->summernote)) {
+            $result = PostImages::saveFromBase64($request->summernote);
+            if ($result) {
+                $images_ids = array_keys($result);
+                $img_reg = '/(?<=px;" src=")[^>]+/';
+                $text = $request->summernote;
+                preg_match_all($img_reg, $text, $matches);
+                foreach ($matches[0] as $match) {
+                    $replacement = array_shift($result); // Получаем следующее значение для замены
+                    $text = str_replace($match, $replacement, $text);
+                }
+                $id = DB::table('posts')->insertGetId([
+                    'title' => $request->title,
+                    'text' => $text,
+                    'level' => $request->level[0],
+                    'user_id' => Auth::user()->id,
+                    'slug' => Str::slug($request->title),
+                    'has_image' => 1,
+                    'created_at' => now(),
+                    'updated_at' => now()]);
+                if (!PostImages::updateImageToPost($id, $images_ids)) return false;
             }
-            $id = DB::table('posts')->insertGetId([
-                'title' => 'test',
-                'text' => $text,
-                'level' => 1,
+        } else {
+            if (!DB::table('posts')->insert([
+                'title' => $request->title,
+                'text' => $request->summernote,
+                'level' => $request->level[0],
                 'user_id' => Auth::user()->id,
-                'slug' => 'test',
+                'slug' => Str::slug($request->title),
+                'has_image' => 0,
                 'created_at' => now(),
-                'updated_at' => now()]);
-            if(PostImages::updateImageToPost($id, $images_ids)) return true;
-        } else return false;
+                'updated_at' => now()])) return false;
+        }
+        return true;
     }
 }
