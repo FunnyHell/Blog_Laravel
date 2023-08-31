@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class PostController extends Controller
 {
     public function store(Request $request){
-        Post::store($request);
-        dd($request);
+        if(Post::store($request)) return redirect(route('dashboard'));
+        else echo 'error';
     }
 }
