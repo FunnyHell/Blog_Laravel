@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -18,6 +19,7 @@ class PostImages extends Model
         $reg_type = '/(?<=data:image\/)[a-z]+(?=;base64)/';
         preg_match_all($reg_type, $base64, $matches_type);
         preg_match_all($reg, $base64, $matches);
+        $paths = [];
         foreach ($matches[0] as $key => $match) {
             try {
                 $image = base64_decode($match);
@@ -25,12 +27,13 @@ class PostImages extends Model
                 if (!Storage::disk('public')->put('/img/' . $image_name, $image)) return false;
                 $path = '/img/' . $image_name;
                 if (PostImages::store($path)) {
-                    return $path;
+                    array_push($paths, $path);
                 } else return false;
             } catch (Exception $e) {
                 return false;
             }
         }
+        return $paths;
     }
 
     public static function store($path)
