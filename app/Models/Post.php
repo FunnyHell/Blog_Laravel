@@ -26,5 +26,6 @@ class Post extends Model
             }
             return DB::table('posts')->insert(['title' => 'test', 'text' => $text, 'level' => 1, 'user_id' => Auth::user()->id, 'slug' => 'test', 'created_at' => now(), 'updated_at' => now()]);
         }
+        else return false;
     }
 }
