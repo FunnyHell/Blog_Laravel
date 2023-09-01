@@ -29,6 +29,11 @@ Route::middleware([
     })->name('dashboard');
 });
 
-Route::group(['prefix'=> 'posts', 'as' => 'posts.'], function(){
-   Route::post('store', [PostController::class, 'store'])->name('store');
+Route::group(['prefix' => 'posts', 'as' => 'posts.'], function () {
+    Route::post('store', [PostController::class, 'store'])->name('store');
+    Route::post('restore', [PostController::class, 'restore'])->name('restore'); #TODO
+    Route::delete('delete', [PostController::class, 'delete'])->name('delete'); #TODO
+    Route::post('publish', [PostController::class, 'publish'])->name('publish'); #TODO
+    Route::post('unpublish', [PostController::class, 'unpublish'])->name('unpublish'); #TODO
+    Route::get('post/{slug}', [PostController::class, 'show'])->name('show');
 });

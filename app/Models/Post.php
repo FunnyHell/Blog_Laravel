@@ -16,7 +16,10 @@ class Post extends Model
     public static function store(\Illuminate\Http\Request $request)
     {
         $reg = '/<img style="[a-z]+: [0-9|.]+px;" src="data:image\/[a-z]{3,4};base64,/';
+        $has_image = 0;
+        $text = $request->summernote;
         if (preg_match($reg, $request->summernote)) {
+            $has_image = 1;
             $result = PostImages::saveFromBase64($request->summernote);
             if ($result) {
                 $images_ids = array_keys($result);
@@ -27,28 +30,36 @@ class Post extends Model
                     $replacement = array_shift($result); // Получаем следующее значение для замены
                     $text = str_replace($match, $replacement, $text);
                 }
-                $id = DB::table('posts')->insertGetId([
-                    'title' => $request->title,
-                    'text' => $text,
-                    'level' => $request->level[0],
-                    'user_id' => Auth::user()->id,
-                    'slug' => Str::slug($request->title),
-                    'has_image' => 1,
-                    'created_at' => now(),
-                    'updated_at' => now()]);
-                if (!PostImages::updateImageToPost($id, $images_ids)) return false;
             }
+        }
+        $table_array = self::InsertPostArray($request, $text, $has_image);
+        if ($has_image) {
+            $id = DB::table('posts')->insert($table_array);
+            if (!PostImages::updateImageToPost($id, $images_ids)) return false;
         } else {
-            if (!DB::table('posts')->insert([
-                'title' => $request->title,
-                'text' => $request->summernote,
-                'level' => $request->level[0],
-                'user_id' => Auth::user()->id,
-                'slug' => Str::slug($request->title),
-                'has_image' => 0,
-                'created_at' => now(),
-                'updated_at' => now()])) return false;
+            if (!DB::table('posts')->insert($table_array)) return false;
         }
         return true;
+    }
+
+    private static function InsertPostArray(\Illuminate\Http\Request $request, mixed $text, int $has_image)
+    {
+        return [
+            'title' => $request->title,
+            'text' => $text,
+            'level' => $request->level[0],
+            'user_id' => Auth::user()->id,
+            'slug' => Str::slug($request->title),
+            'has_image' => $has_image,
+            'created_at' => now(),
+            'updated_at' => now()];
+    }
+
+    public
+    static function GetPosts()
+    {
+        if (count(func_get_args()) == 0) return DB::table('posts')->get();
+        if (count(func_get_args()) == 1) return DB::table('posts')->where('user_id', func_get_args()[0])->get();
+        else return null;
     }
 }

@@ -31,7 +31,7 @@
         </div>
         <div id="posts-block"
              class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg sm:w-10/12 ml-2 mr-2 mt-16 sm:mt-0"
-             style="display: none;">
+{{--             style="display: none;">--}}>
                         @livewire('posts')
         </div>
         <div id="comments-block"
@@ -40,10 +40,10 @@
                         @livewire('comments')
         </div>
 
-        <div id="default-block"
-             class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg sm:w-10/12 ml-2 mr-2 mt-16 sm:mt-0">
-            <h1 class="font-semibold text-xl text-gray-800 dark:text-gray-200 m-4">{{__('Hello, ')}} {{ Auth::user()->first_name }} {{Auth::user()->second_name}}</h1>
-        </div>
+{{--        <div id="default-block"--}}
+{{--             class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg sm:w-10/12 ml-2 mr-2 mt-16 sm:mt-0">--}}
+{{--            <h1 class="font-semibold text-xl text-gray-800 dark:text-gray-200 m-4">{{__('Hello, ')}} {{ Auth::user()->first_name }} {{Auth::user()->second_name}}</h1>--}}
+{{--        </div>--}}
     </div>
 </x-app-layout>
 
