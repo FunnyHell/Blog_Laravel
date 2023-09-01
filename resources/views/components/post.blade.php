@@ -16,8 +16,8 @@
             <h1 class="text-gray-900 dark:text-white col-span-3 sm:col-span-3 font-semibold sm:text-xl">
                 {{__('Comments')}}: {{$post->comment_count}}
             </h1>
-
         </div>
+    </div>
 </a>
 <div class="grid gap-6 grid-cols-2 sm:grid-cols-8 mt-8">
     @if(!$post->is_published)
