@@ -15,7 +15,7 @@ class PostImages extends Model
 
     public static function saveFromBase64($base64)
     {
-        $reg = '/(?<=;base64,)[^"]+(?=")/';
+        $reg = '/(?<=;base64,)[^>]+(?!>)/';
         $reg_type = '/(?<=data:image\/)[a-z]+(?=;base64)/';
         preg_match_all($reg_type, $base64, $matches_type);
         preg_match_all($reg, $base64, $matches);
@@ -26,7 +26,7 @@ class PostImages extends Model
                 $image = base64_decode($match);
                 $image_name = Str::random(10) . '.' . $matches_type[0][$key];
                 if (!Storage::disk('public')->put('/img/' . $image_name, $image)) return false;
-                $path = '/img/' . $image_name;
+                $path = 'img/' . $image_name;
                 array_push($ids, PostImages::store($path));
                 array_push($paths, $path);
             } catch (Exception $e) {
@@ -39,7 +39,7 @@ class PostImages extends Model
 
     public static function store($path)
     {
-        return DB::table('post_images')->insertGetId(['url' => $path]);
+        DB::table('post_images')->insertGetId(['url' => $path]);
     }
 
     public static function updateImageToPost(int $post_id, array $images_ids)
@@ -48,5 +48,10 @@ class PostImages extends Model
             DB::table('post_images')->where('id', $image_id)->update(['post_id' => $post_id]);
         }
         return true;
+    }
+
+    public static function GetPostImages($id)
+    {
+        return DB::table('post_images')->where('post_id', $id)->get();
     }
 }

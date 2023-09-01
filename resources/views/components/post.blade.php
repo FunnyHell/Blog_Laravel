@@ -1,5 +1,5 @@
 <div class="bg-gray-300 dark:bg-gray-600 overflow-hidden shadow-xl sm:rounded-lg m-4 p-2">
-    <a href="{{route('posts.show', $post->slug)}}">
+    <a href="{{route('posts.show',[$post->id, $post->slug])}}">
         <div class="grid gap-6 grid-cols-7 sm:grid-cols-12">
             <h1 class="text-gray-900 dark:text-white col-span-5 sm:col-span-3 font-semibold sm:text-xl">
                 {{$post->title}}

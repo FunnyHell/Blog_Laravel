@@ -23,7 +23,7 @@ class Post extends Model
             $result = PostImages::saveFromBase64($request->summernote);
             if ($result) {
                 $images_ids = array_keys($result);
-                $img_reg = '/(?<=px;" src=")[^>]+/';
+                $img_reg = '/(?<=px;" src=")[^>]+(?!>)/';
                 $text = $request->summernote;
                 preg_match_all($img_reg, $text, $matches);
                 foreach ($matches[0] as $match) {
@@ -34,7 +34,7 @@ class Post extends Model
         }
         $table_array = self::InsertPostArray($request, $text, $has_image);
         if ($has_image) {
-            $id = DB::table('posts')->insert($table_array);
+            $id = DB::table('posts')->insertGetId($table_array);
             if (!PostImages::updateImageToPost($id, $images_ids)) return false;
         } else {
             if (!DB::table('posts')->insert($table_array)) return false;
@@ -61,5 +61,10 @@ class Post extends Model
         if (count(func_get_args()) == 0) return DB::table('posts')->get();
         if (count(func_get_args()) == 1) return DB::table('posts')->where('user_id', func_get_args()[0])->get();
         else return null;
+    }
+
+    public static function GetPost($id)
+    {
+        return DB::table('posts')->where('id', $id)->first();
     }
 }

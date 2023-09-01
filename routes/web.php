@@ -35,5 +35,5 @@ Route::group(['prefix' => 'posts', 'as' => 'posts.'], function () {
     Route::delete('delete', [PostController::class, 'delete'])->name('delete'); #TODO
     Route::post('publish', [PostController::class, 'publish'])->name('publish'); #TODO
     Route::post('unpublish', [PostController::class, 'unpublish'])->name('unpublish'); #TODO
-    Route::get('post/{slug}', [PostController::class, 'show'])->name('show');
+    Route::get('post/{id}/{slug}', [PostController::class, 'show'])->name('show');
 });
