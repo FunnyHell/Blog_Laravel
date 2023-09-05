@@ -39,7 +39,7 @@ class PostImages extends Model
 
     public static function store($path)
     {
-        DB::table('post_images')->insertGetId(['url' => $path]);
+        return DB::table('post_images')->insertGetId(['url' => $path]);
     }
 
     public static function updateImageToPost(int $post_id, array $images_ids)

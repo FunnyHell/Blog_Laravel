@@ -18,8 +18,5 @@ export default defineConfig({
                 'app/Http/Livewire/**',
             ],
         }),
-    ],
-    optimizeDeps: {
-        include: ['trix']
-    }
+    ]
 });

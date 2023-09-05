@@ -15,7 +15,7 @@ class Post extends Model
 
     public static function store(\Illuminate\Http\Request $request)
     {
-        $reg = '/<img style="[a-z]+: [0-9|.]+px;" src="data:image\/[a-z]{3,4};base64,/';
+        $reg = '/src="data:image\/[a-z]{3,4};base64,/';
         $has_image = 0;
         $text = $request->summernote;
         if (preg_match($reg, $request->summernote)) {
@@ -23,8 +23,9 @@ class Post extends Model
             $result = PostImages::saveFromBase64($request->summernote);
             if ($result) {
                 $images_ids = array_keys($result);
-                $img_reg = '/(?<=px;" src=")[^>]+(?!>)/';
+                $img_reg = '/(?<=<img src="|;" src=")(?:data:image\/)[^"]+/';
                 $text = $request->summernote;
+
                 preg_match_all($img_reg, $text, $matches);
                 foreach ($matches[0] as $match) {
                     $replacement = array_shift($result); // Получаем следующее значение для замены
