@@ -27,7 +27,7 @@
             </div>
         </div>
 
-        <div #comments-block>
+        <div id="comments-block">
             @livewire('comments', ['post_id' => $post->id])
         </div>
         <!-- TODO: commentaries component, likes, view_count, buttons for editting (for creators) and controllers, models for this -->

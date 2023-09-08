@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -32,17 +33,40 @@ class Comment extends Model
             ->get();
 
         if (!empty($notNullArray)) { //If we have reply
-            $array = Comment::SortingByReplies($nullArray, $notNullArray);
+            $array = self::SortingByReplies($nullArray, $notNullArray);
         } else $array = $nullArray;
 
-        //For marking author this post
         $author_id = DB::table('posts')->where('id', $id)->first('user_id');
         foreach ($array as $item) {
+            //For making time difference
+            if ($item->updated_at === null) {
+                $item->was_updated = false;
+                $timeDiff = date_diff(Carbon::parse($item->created_at), now());
+            } else {
+                $item->was_updated = true;
+                $timeDiff = date_diff(Carbon::parse($item->created_at), now());
+            }
+            $item->time = self::TimeDifference($timeDiff);
+
+            //For marking author this post
             if ($item->user_id === $author_id->user_id) $item->post_author = true;
             else $item->post_author = false;
         }
 
         return $array;
+    }
+
+    private static function TimeDifference($timeDiff){
+        switch ($timeDiff){
+            case $timeDiff->m > 0:
+                return 'long time ago';
+            case $timeDiff->h === 0:
+                return $timeDiff->i . 'м';
+            case $timeDiff->d === 0:
+                return $timeDiff->h . 'ч ' . $timeDiff->i . 'м';
+            default:
+                return $timeDiff->d . 'д ' . $timeDiff->h . 'ч ';
+        }
     }
 
     private static function SortingByReplies($nullArray, $notNullArray)

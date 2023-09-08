@@ -1,7 +1,7 @@
 <div>
-    @foreach($comments as $comment)
-        <div>
-
-        </div>
-    @endforeach
+    @if($comments)
+        @foreach($comments as $comment)
+            <x-commentary :comment="$comment"/>
+        @endforeach
+    @endif
 </div>

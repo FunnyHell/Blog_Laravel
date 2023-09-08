@@ -7,9 +7,10 @@ use Livewire\Component;
 
 class Comments extends Component
 {
-    public function mount($post_id)
+    public function mount($post_id = null)
     {
-        $this->comments = CommentController::GetPostComments($post_id);
+        if($post_id) $this->comments = CommentController::GetPostComments($post_id);
+        else $this->comments = false;
     }
 
     public function render()
