@@ -68,4 +68,9 @@ class Post extends Model
     {
         return DB::table('posts')->where('id', $id)->first();
     }
+
+    public static function IncrementeViewCount($id)
+    {
+        DB::table('posts')->where('id', $id)->increment('view_count');
+    }
 }

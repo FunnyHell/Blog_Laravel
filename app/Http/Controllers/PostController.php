@@ -23,6 +23,7 @@ class PostController extends Controller
 
     public function show($id)
     {
+        Post::IncrementeViewCount($id);
         $post = Post::GetPost($id);
         if ($post->has_image) {
             $post_images = PostImages::GetPostImages($id);

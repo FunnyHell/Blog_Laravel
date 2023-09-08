@@ -15,6 +15,8 @@
     </style>
     <textarea id="summernote" name="summernote" class="form-control"></textarea>
 
+
+    <!-- TODO: Check if request has a post->text put it into $summernote.summernote('code', newText); -->
     <script>
         $(document).ready(function () {
             $('#summernote').summernote({

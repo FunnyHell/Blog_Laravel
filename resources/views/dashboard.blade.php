@@ -27,33 +27,36 @@
         <div id="new-post-block"
              class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg sm:w-10/12 ml-2 mr-2 mt-16 sm:mt-0"
              style="display: none;">
-                        @livewire('new-post')
+            @livewire('new-post')
         </div>
         <div id="posts-block"
              class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg sm:w-10/12 ml-2 mr-2 mt-16 sm:mt-0"
-{{--             style="display: none;">--}}>
-                        @livewire('posts')
+             style="display: none;">
+            @livewire('posts')
         </div>
         <div id="comments-block"
              class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg sm:w-10/12 ml-2 mr-2 mt-16 sm:mt-0"
              style="display: none;">
-                        @livewire('comments')
+            @livewire('comments')
         </div>
 
-{{--        <div id="default-block"--}}
-{{--             class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg sm:w-10/12 ml-2 mr-2 mt-16 sm:mt-0">--}}
-{{--            <h1 class="font-semibold text-xl text-gray-800 dark:text-gray-200 m-4">{{__('Hello, ')}} {{ Auth::user()->first_name }} {{Auth::user()->second_name}}</h1>--}}
-{{--        </div>--}}
+        <div id="default-block"
+             class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg sm:w-10/12 ml-2 mr-2 mt-16 sm:mt-0">
+            <h1 class="font-semibold text-xl text-gray-800 dark:text-gray-200 m-4">{{__('Hello, ')}} {{ Auth::user()->first_name }} {{Auth::user()->second_name}}</h1>
+        </div>
     </div>
 </x-app-layout>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const buttons = [
-            { button: document.getElementById("new-post-button"), block: document.getElementById("new-post-block") },
-            { button: document.getElementById("watch-all-posts-button"), block: document.getElementById("posts-block") },
-            { button: document.getElementById("watch-new-comments-button"), block: document.getElementById("comments-block") },
-            { button: null, block: document.getElementById("default-block") },
+            {button: document.getElementById("new-post-button"), block: document.getElementById("new-post-block")},
+            {button: document.getElementById("watch-all-posts-button"), block: document.getElementById("posts-block")},
+            {
+                button: document.getElementById("watch-new-comments-button"),
+                block: document.getElementById("comments-block")
+            },
+            {button: null, block: document.getElementById("default-block")},
         ];
 
         function showBlock(block) {
