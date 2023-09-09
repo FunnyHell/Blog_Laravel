@@ -11,33 +11,61 @@ class Comment extends Model
 {
     use HasFactory;
 
-    public static function GetPostComments($id)
+    public static function GetPostParentComments($id)
     {
-        #TODO: Попробовать паггинацию
-        $nullArray = DB::table('comments')
+        #TODO: Remake function on this rules:
+        #TODO: 2. Make function to get replies, where:
+        #TODO: 2.1. get comments with reply_id = id of current comment
+        #TODO: 2.2. traversal array with replies for adding to them columns: reply_user_name, reply_text
+        $array = DB::table('comments')
             ->where('post_id', $id)
+            ->where('is_deleted', false)
             ->where('reply_id', null)
             ->LeftJoin('users', function ($join) {
                 $join->on('comments.user_id', 'users.id');
             })
             ->select('comments.*', 'users.nickname', 'users.profile_photo_path', 'users.role')
-            ->get();
-        $notNullArray = DB::table('comments')
-            ->where('post_id', $id)
-            ->where('reply_id', '!=', null)
+            ->paginate(20);
+
+        $array = self::AddColumns($array, $id);
+
+        return json_encode($array);
+    }
+
+    public static function GetPostAnswersComments($id)
+    {
+        $array = DB::table('comments')
+            ->where('reply_id', $id)
+            ->where('is_deleted', false)
             ->orderBy('reply_id')
             ->orderBy('id')
             ->LeftJoin('users', function ($join) {
                 $join->on('comments.user_id', 'users.id');
             })
             ->select('comments.*', 'users.nickname', 'users.profile_photo_path', 'users.role')
-            ->get();
+            ->paginate(10);
+        $post_id = $array[0]->post_id;
+        $array = self::AddColumns($array, $post_id);
+        foreach ($array as $item) {
+            $reply_user_name = DB::table('users')->where('id', $item->reply_author_id)->first('nickname');
+            $item->reply_user_name = $reply_user_name->nickname;
+            $reply_text = DB::table('comments')->where('id', $item->reply_id)->first('text');
+            $item->reply_text = $reply_text->text;
+        }
 
-        if (!empty($notNullArray)) { //If we have reply
-            $array = self::SortingByReplies($nullArray, $notNullArray);
-        } else $array = $nullArray;
+        return json_encode($array);
+    }
 
-        $author_id = DB::table('posts')->where('id', $id)->first('user_id');
+    private static function AddColumns($array, $post_id)
+    {
+        foreach ($array as $item) {
+            if (DB::table('comments')
+                ->where('reply_id', $item->id)
+                ->first()) $item->has_replies = true;
+            else $item->has_replies = false;
+        }
+
+        $author_id = DB::table('posts')->where('id', $post_id)->first('user_id');
         foreach ($array as $item) {
             //For making time difference
             if ($item->updated_at === null) {
@@ -53,7 +81,8 @@ class Comment extends Model
             if ($item->user_id === $author_id->user_id) $item->post_author = true;
             else $item->post_author = false;
         }
-        return json_encode($array);
+
+        return $array;
     }
 
     private static function TimeDifference($timeDiff)
@@ -68,24 +97,5 @@ class Comment extends Model
             default:
                 return $timeDiff->d . 'д ' . $timeDiff->h . 'ч ';
         }
-    }
-
-    private static function SortingByReplies($nullArray, $notNullArray)
-    {
-        #TODO: Попробовать реализовать ответ на ответ
-        $finalArray[0] = $nullArray[0];
-        $nnCounter = 0;
-        for ($i = 0; $i < count($nullArray); $i++) { //We traversal array by main commentaries (without reply)
-            if ($finalArray[count($finalArray) - 1]->reply_id === null) { //If main commentary is last we find and push replies
-                $k = count($finalArray) - 1; //Save position of last nullable element
-                while ($nnCounter < count($notNullArray) && $notNullArray[$nnCounter]->reply_id === $finalArray[$k]->id) { //Push array while we have replies
-                    $finalArray[] = $notNullArray[$nnCounter];
-                    $nnCounter++;
-                }
-            } else {
-                $finalArray[] = $nullArray[$i];
-            }
-        }
-        return $finalArray;
     }
 }

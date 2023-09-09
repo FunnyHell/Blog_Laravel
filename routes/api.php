@@ -22,5 +22,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::group(['prefix' => 'post', 'as' => 'post.'], function () {
     Route::post('/like', [LikeController::class, 'store'])->name('like');
-    Route::get('/{id}/comments', [CommentController::class, 'GetPostComments'])->name('index');
+    Route::get('/{id}/comments', [CommentController::class, 'GetPostParentComments'])->name('index');
+    Route::get('/{id}/comment', [CommentController::class, 'GetPostAnswersComments'])->name('answers');
 });

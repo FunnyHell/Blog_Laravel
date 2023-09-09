@@ -37,7 +37,7 @@
         <div id="comments-block"
              class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg sm:w-10/12 ml-2 mr-2 mt-16 sm:mt-0"
              style="display: none;">
-            @livewire('comments')
+{{--            @livewire('comments')--}}
         </div>
 
         <div id="default-block"

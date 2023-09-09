@@ -21,9 +21,9 @@ class PostController extends Controller
         else echo 'error';
     }
 
-    public function show($id)
+    public function show($id, $slug)
     {
-        Post::IncrementeViewCount($id);
+        if (url()->current() == route('posts.show', [$id, $slug])) Post::IncrementeViewCount($id);
         $post = Post::GetPost($id);
         if ($post->has_image) {
             $post_images = PostImages::GetPostImages($id);

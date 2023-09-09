@@ -29,8 +29,8 @@
             </div>
 
             <div id="comments-block">
-{{--                @livewire('comments', ['post_id' => $post->id])--}}
-                <commentaries-component :user_id="{{Auth::user()->id}}" :post_id="{{$post->id}}"></commentaries-component>
+                <commentaries-component :user_id="{{Auth::user()->id}}"
+                                        :post_id="{{$post->id}}"></commentaries-component>
             </div>
             <!-- TODO: buttons for editting (for creators) and controllers, models for this -->
         </div>

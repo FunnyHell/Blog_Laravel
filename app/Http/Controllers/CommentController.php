@@ -8,8 +8,13 @@ use Illuminate\Http\Request;
 class CommentController extends Controller
 {
     //
-    public static function GetPostComments($id)
+    public static function GetPostParentComments($id)
     {
-        return Comment::GetPostComments($id);
+        return Comment::GetPostParentComments($id);
+    }
+
+    public static function GetPostAnswersComments($id)
+    {
+        return Comment::GetPostAnswersComments($id);
     }
 }
