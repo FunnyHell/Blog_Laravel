@@ -13,10 +13,10 @@ class Comment extends Model
 
     public static function GetPostComments($id)
     {
+        #TODO: Попробовать паггинацию
         $nullArray = DB::table('comments')
             ->where('post_id', $id)
             ->where('reply_id', null)
-            ->orderBy('reply_id')
             ->LeftJoin('users', function ($join) {
                 $join->on('comments.user_id', 'users.id');
             })
@@ -26,6 +26,7 @@ class Comment extends Model
             ->where('post_id', $id)
             ->where('reply_id', '!=', null)
             ->orderBy('reply_id')
+            ->orderBy('id')
             ->LeftJoin('users', function ($join) {
                 $join->on('comments.user_id', 'users.id');
             })
@@ -52,12 +53,12 @@ class Comment extends Model
             if ($item->user_id === $author_id->user_id) $item->post_author = true;
             else $item->post_author = false;
         }
-
-        return $array;
+        return json_encode($array);
     }
 
-    private static function TimeDifference($timeDiff){
-        switch ($timeDiff){
+    private static function TimeDifference($timeDiff)
+    {
+        switch ($timeDiff) {
             case $timeDiff->m > 0:
                 return 'long time ago';
             case $timeDiff->h === 0:
@@ -71,20 +72,18 @@ class Comment extends Model
 
     private static function SortingByReplies($nullArray, $notNullArray)
     {
+        #TODO: Попробовать реализовать ответ на ответ
         $finalArray[0] = $nullArray[0];
         $nnCounter = 0;
-
-        for ($i = 1; $i <= count($nullArray); $i++) { //We traversal array by main commentaries (without reply)
+        for ($i = 0; $i < count($nullArray); $i++) { //We traversal array by main commentaries (without reply)
             if ($finalArray[count($finalArray) - 1]->reply_id === null) { //If main commentary is last we find and push replies
-                $k = count($finalArray) - 1;
-
-                do { //Pushing replies until reply_id === id in last element of summary array which was last in the 22 row at if statement
+                $k = count($finalArray) - 1; //Save position of last nullable element
+                while ($nnCounter < count($notNullArray) && $notNullArray[$nnCounter]->reply_id === $finalArray[$k]->id) { //Push array while we have replies
                     $finalArray[] = $notNullArray[$nnCounter];
                     $nnCounter++;
-                } while ($nnCounter < count($notNullArray) && $notNullArray[$nnCounter]->reply_id === $finalArray[$k]->id);
-
-                //We must have $i <= count($nullArray) because we can have replies for last element at nullArray
-                if ($i != count($nullArray)) $finalArray[] = $nullArray[$i];
+                }
+            } else {
+                $finalArray[] = $nullArray[$i];
             }
         }
         return $finalArray;
