@@ -5,6 +5,13 @@ export default {
     props: ['comment', 'user_id', 'csrf'],
     data() {
         return {
+            answer_form: {
+                post_id: this.comment.post_id,
+                user_id: this.user_id,
+                text: '',
+                reply_id: this.comment.id,
+                reply_author_id: this.comment.user_id,
+            },
             answers: [],
             page: 1,
             finished: false,
@@ -35,6 +42,20 @@ export default {
         },
         toggleAnswers() {
             this.answer_toggler = !this.answer_toggler;
+        },
+        submit() {
+            axios.post('/api/post/' + this.comment.id + '/reply', this.answer_form)
+                .then(response => {
+                    if (!this.comment.has_replies) {
+                        this.comment.has_replies = true;
+                    } else {
+                        this.answers.push(response.data);
+                    }
+                    this.answer_form.text = '';
+                })
+                .catch(error => {
+                    console.log(error);
+                })
         }
     },
 }
@@ -96,23 +117,18 @@ export default {
             </div>
         </div>
         <div :class="{ visible : answer_toggler, hidden : !answer_toggler }">
-            
+
             #TODO: remake form: remove action field, make method, add @click to submit button, move all hidden input
             fields to method like variables
 
-            <form method="post" :action="'/api/post/' + comment.id + '/reply'">
-                <input type="hidden" name="_token" :value="csrf">
-                <input type="hidden" name="reply_id" :value="comment.id">
-                <input type="hidden" name="post_id" :value="comment.post_id">
-                <input type="hidden" name="user_id" :value="user_id">
-                <input type="hidden" name="reply_author_id" :value="comment.user_id">
+            <form method="post" @submit.prevent="submit">
                 <div
                     class="w-full mb-4 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
                     <div class="px-4 py-2 bg-white rounded-t-lg dark:bg-gray-800">
                         <textarea id="comment" rows="4"
                                   class="w-full px-0 text-sm text-gray-900 bg-white border-0 dark:bg-gray-800
                                   focus:ring-0 dark:text-white dark:placeholder-gray-400"
-                                  placeholder="Write a comment..." required></textarea>
+                                  placeholder="Write a comment..." v-model="answer_form.text" required></textarea>
                     </div>
                     <div class="flex items-center justify-between px-3 py-2 border-t dark:border-gray-600">
                         <input type="submit"
