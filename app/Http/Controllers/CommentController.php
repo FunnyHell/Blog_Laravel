@@ -17,4 +17,9 @@ class CommentController extends Controller
     {
         return Comment::GetPostAnswersComments($id);
     }
+
+    public static function reply(Request $request)
+    {
+        return Comment::reply($request);
+    }
 }

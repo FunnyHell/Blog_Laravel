@@ -23,14 +23,13 @@
                     </div>
                 </a>
                 <div class="flex items-center">
-                    <img src="{{asset('img/views.png')}}" class="h-8 mr-3" alt="">
-                    <h2 class="dark:text-white">{{$post->view_count}}</h2>
+                    <views-component :view_count="{{$post->view_count}}" :post_id="{{$post->id}}" :csrf="{{csrf_token()}}"></views-component>
                 </div>
             </div>
 
             <div id="comments-block">
                 <commentaries-component :user_id="{{Auth::user()->id}}"
-                                        :post_id="{{$post->id}}"></commentaries-component>
+                                        :post_id="{{$post->id}}" :csrf="{{csrf_token()}}"></commentaries-component>
             </div>
             <!-- TODO: buttons for editting (for creators) and controllers, models for this -->
         </div>

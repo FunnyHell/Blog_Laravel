@@ -23,7 +23,6 @@ class PostController extends Controller
 
     public function show($id, $slug)
     {
-        if (url()->current() == route('posts.show', [$id, $slug])) Post::IncrementeViewCount($id);
         $post = Post::GetPost($id);
         if ($post->has_image) {
             $post_images = PostImages::GetPostImages($id);
@@ -31,5 +30,10 @@ class PostController extends Controller
         } else {
             return view('post', ['post' => $post,]);
         }
+    }
+
+    public function AddView(Request $request)
+    {
+        return Post::AddView($request);
     }
 }

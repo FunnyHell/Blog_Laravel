@@ -2,7 +2,7 @@
 let apiEndpoint;
 export default {
     name: 'CommentaryComponent',
-    props: ['comment', 'user_id'],
+    props: ['comment', 'user_id', 'csrf'],
     data() {
         return {
             answers: [],
@@ -32,6 +32,9 @@ export default {
         },
         toggleReplies() {
             this.replies_toggler = !this.replies_toggler;
+        },
+        toggleAnswers() {
+            this.answer_toggler = !this.answer_toggler;
         }
     },
 }
@@ -78,19 +81,56 @@ export default {
 
         <p class="text-gray-800 dark:text-gray-200 text-sm sm:text-base break-all">{{ comment.text }}</p>
 
-        <div v-if="comment.has_replies" class="flex justify-end mb-4">
-            <button @click="toggleReplies(); getAnswers()"
-                    class="bg-blue-500 hover:bg-blue-700 dark:text-white mt-3 px-4 flex items-center">
-                <img src="/img/down_arrow.svg" class="h-4 mr-3" alt="" v-if="replies_toggler === false">
-                <img src="/img/down_arrow.svg" class="h-4 mr-3 inverted" alt="" v-else>
-                <h2>Replies</h2>
+        <div class="flex justify-between mb-4">
+            <button @click="toggleAnswers"
+                    class="bg-gray-50 dark:bg-gray-600 hover:bg-gray-300 hover:dark:bg-gray-500 border-2 rounded-lg border-gray-100 dark:border-gray-500 dark:text-white mt-3 px-4 py-2">
+                <h2>Answer</h2>
             </button>
+            <div v-if="comment.has_replies">
+                <button @click="toggleReplies(); getAnswers()"
+                        class="dark:text-white mt-3 px-4 flex items-center">
+                    <img src="/img/down_arrow.svg" class="h-4 mr-3" alt="" v-if="replies_toggler === false">
+                    <img src="/img/down_arrow.svg" class="h-4 mr-3 inverted" alt="" v-else>
+                    <h2>Replies</h2>
+                </button>
+            </div>
+        </div>
+        <div :class="{ visible : answer_toggler, hidden : !answer_toggler }">
+            
+            #TODO: remake form: remove action field, make method, add @click to submit button, move all hidden input
+            fields to method like variables
+
+            <form method="post" :action="'/api/post/' + comment.id + '/reply'">
+                <input type="hidden" name="_token" :value="csrf">
+                <input type="hidden" name="reply_id" :value="comment.id">
+                <input type="hidden" name="post_id" :value="comment.post_id">
+                <input type="hidden" name="user_id" :value="user_id">
+                <input type="hidden" name="reply_author_id" :value="comment.user_id">
+                <div
+                    class="w-full mb-4 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+                    <div class="px-4 py-2 bg-white rounded-t-lg dark:bg-gray-800">
+                        <textarea id="comment" rows="4"
+                                  class="w-full px-0 text-sm text-gray-900 bg-white border-0 dark:bg-gray-800
+                                  focus:ring-0 dark:text-white dark:placeholder-gray-400"
+                                  placeholder="Write a comment..." required></textarea>
+                    </div>
+                    <div class="flex items-center justify-between px-3 py-2 border-t dark:border-gray-600">
+                        <input type="submit"
+                               class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white
+                                bg-gray-700 rounded-lg focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-900 hover:bg-gray-800"
+                               value="Post comment">
+
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
+
+
     <div class="dark:bg-opacity-30 bg-opacity-25 bg-gray-200 dark:bg-gray-700 sm:ml-6 rounded-lg">
         <div :id="'answers-' + comment.id" :class="{ visible : replies_toggler, hidden : !replies_toggler }">
             <div v-for="answer in answers">
-                <commentary-component :comment="answer" :user_id="user_id"></commentary-component>
+                <commentary-component :comment="answer" :user_id="user_id" :csrf="csrf"></commentary-component>
             </div>
         </div>
     </div>

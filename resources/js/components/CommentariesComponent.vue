@@ -2,7 +2,7 @@
 let apiEndpoint;
 export default {
     name: 'CommentariesComponent',
-    props: ['user_id', 'post_id'],
+    props: ['user_id', 'post_id', 'csrf'],
     data() {
         return {
             comments: [],
@@ -33,7 +33,7 @@ export default {
 
 <template>
     <div v-for="comment in comments">
-        <commentary-component :comment="comment" :user_id="user_id"/>
+        <commentary-component :comment="comment" :user_id="user_id" :csrf="csrf" />
     </div>
         <div style="opacity: 0">
             <infinite-loading :distance="200" @infinite="infiniteHandler"></infinite-loading>
